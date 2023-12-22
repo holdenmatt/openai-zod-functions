@@ -4,5 +4,8 @@
   "description": "OpenAI Function Calling in Typescript using Zod.",
   "author": "Matt Holden",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "devDependencies": {
+    "tsup": "^8.0.1"
+  }
 }
