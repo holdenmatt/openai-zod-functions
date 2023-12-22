@@ -1,6 +1,6 @@
 {
   "name": "openai-zod-functions",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OpenAI Function Calling in Typescript using Zod",
   "author": "Matt Holden",
   "license": "MIT",
