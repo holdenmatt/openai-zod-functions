@@ -1,14 +1,14 @@
 # openai-zod-functions
 
-OpenAI Function Calling in Typescript using Zod.
+OpenAI [Function Calling](https://platform.openai.com/docs/guides/function-calling) in Typescript using [Zod](https://zod.dev/).
 
 Warning: This library isn't 100% stable yet, and APIs may change.
 Feel free to fork/copy code if helpful.
 
 ## What is this?
 
-OpenAI [Function Calling](https://platform.openai.com/docs/guides/function-calling),
-released in June 2023, is one of the most exciting parts of LLM APIs.
+OpenAI Function Calling (released in June 2023), is my favorite part of using
+LLM APIs.
 
 This library makes it easier to use Function Calling in TypeScript
 using [Zod](https://zod.dev/) to define functions instead of JSON-Schema.
@@ -19,14 +19,14 @@ It handles:
 - Using Zod to parse, validate, and type function call arguments
 
 It also provides two optional higher-level patterns:
-- A ZodFunctionHandler combines a function definition with its corresponding handler
-- A ZodFunctionReducer can facilitate more complex state updates via function calls
+- A `ZodFunctionHandler` combines a function definition with its corresponding handler
+- A `ZodFunctionReducer` can facilitate more complex state updates via function calls
 
 ## Why Zod?
 
 Because it's great!
 
-It's very expressive for validation, and plays very well with Typescript (unlike JSON-Schema).
+It's very expressive for validation, and plays nicely with Typescript (unlike JSON-Schema).
 
 It's also much more succinct. The example below is only 43% the length of the
 equivalent JSON-Schema from the OpenAI [cookbook](https://cookbook.openai.com/examples/how_to_call_functions_with_chat_models).
@@ -50,7 +50,7 @@ The simplest approach just uses [Zod](https://zod.dev/) for function definitions
 and leaves all other behavior up to you.
 
 For example:
-```
+```typescript
 import { ZodFunctionDef, toTool } from "openai-zod-functions";
 
 // Define functions using Zod
@@ -82,13 +82,13 @@ const completion = await openai.chat.completions.create({
 
 ## Parsing arguments
 
-OpenAI completions return function call "arguments" as a string, and unfortunately models can
+OpenAI completions return a function call's `arguments` as a string, and unfortunately models can
 hallucinate arguments that don't match the schema.
 
 This can be solved by using the same Zod function schema to parse/validate output.
 
 For example, continuing the example above:
-```
+```typescript
 import { parseArguments } from "openai-zod-functions";
 
 const functions: ZodFunctionDef[] = ...
@@ -124,7 +124,7 @@ and type inference from your schema. It's more opinionated than the more manual
 approach above.
 
 For example:
-```
+```typescript
 const functions = [
   createFunctionHandler({
     name: "get_current_weather",
@@ -171,7 +171,9 @@ const { temperature } = toolOutputs[0];
 If you find this useful or have suggestions, file an issue, start a discussion, or
 you can find me [here](https://twitter.com/holdenmatt).
 
-## Advanced: ZodFunctionReducer
+# Advanced
+
+## ZodFunctionReducer
 
 (This section is WIP, and you probably don't need it.)
 
@@ -198,7 +200,7 @@ Here, user actions are replaced with LLM function calls.
 Here's a simplified example, showing how a ZodFunctionReducer could be used to modify
 a chart's state via OpenAI function calls based on a user prompt:
 
-```
+```typescript
 import { ZodFunctionReducer, reduceToolCall } from "openai-zod-functions";
 
 // Model our application state within a domain we want to use AI to manipulate.
