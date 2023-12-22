@@ -5,6 +5,11 @@ OpenAI [Function Calling](https://platform.openai.com/docs/guides/function-calli
 Warning: This library isn't 100% stable yet, and APIs may change.
 Feel free to fork/copy code if helpful.
 
+## Install
+```
+npm install openai-zod-functions
+```
+
 ## What is this?
 
 OpenAI [Function Calling](https://platform.openai.com/docs/guides/function-calling)
