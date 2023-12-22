@@ -119,8 +119,8 @@ For example, you may want to retry, or display an error or suggestions to users.
 The pattern I typically use is to colocate my function definitions with the
 handlers they should call.
 
-For that, your can use `createFunctionHandler`, which handles argument parsing
-and type inference from your schema. It's more opinionated than the more manual
+For that, you can use `createFunctionHandler`, which handles type inference from your schema,
+argument parsing, and multiple tool calls. It's more opinionated than the more manual
 approach above.
 
 For example:
@@ -173,11 +173,11 @@ you can find me [here](https://twitter.com/holdenmatt).
 
 # Advanced
 
-## ZodFunctionReducer
-
 (This section is WIP, and you probably don't need it.)
 
-A ZodFunctionReducer is a more advanced alternative to ZodFunctionHandlers.
+## ZodFunctionReducer
+
+A `ZodFunctionReducer` is a more advanced alternative to ZodFunctionHandlers.
 In most cases, it's simpler to use function handlers as described above.
 
 However, I've found a function reducer can be useful when:
@@ -185,19 +185,23 @@ However, I've found a function reducer can be useful when:
 - You want to organize all state updates in one place,
 - You're using function calls to **modify an object's state**, NOT as part of a chat conversation.
 
-For example, I use this pattern for [ChartPilot](chartpilot.com), where LLM function calling
+For example, I use this pattern for [ChartPilot](https://chartpilot.com), where LLM function calling
 is used as a "fuzzy command palette" to update the state of a chart.
 
 [v0.dev](https://v0.dev/) is another nice example (not affiliated with me) where an LLM
 is used to modify the state of an object (a user interface), not as a chat interface.
 
-The "function reducer" pattern here was inspired by Elm/Redux "reducers" or React's
-[`useReducer`](https://react.dev/reference/react/useReducer) hook, where a user action triggers a
-state update using a reducer function of the form `(prevState, action) => newState`.
+The "function reducer" idea was inspired by React's
+[`useReducer`](https://react.dev/reference/react/useReducer) hook
+(a descendent of Elm/Redux reducers). In this pattern, a user action triggers a
+state update using a reducer function of the form
+```
+(prevState, action) => newState
+```
 
-Here, user actions are replaced with LLM function calls.
+A function reducer replaces user actions with LLM function calls.
 
-Here's a simplified example, showing how a ZodFunctionReducer could be used to modify
+Here's a simplified example, showing how a `ZodFunctionReducer` could be used to modify
 a chart's state via OpenAI function calls based on a user prompt:
 
 ```typescript
@@ -208,10 +212,10 @@ import { ZodFunctionReducer, reduceToolCall } from "openai-zod-functions";
 const ChartTypeEnum = z.enum(["Line", "Bar", "Point"]).describe("Type of chart");
 type ChartType = z.infer<typeof ChartTypeEnum>;
 
-const AppearanceEnum = z.enum(["Light", "Dark"]).describe("Render chart in light or dark mode?");
+const AppearanceEnum = z.enum(["Light", "Dark"]).describe("Render in light or dark mode?");
 type Appearance = z.infer<typeof AppearanceEnum>;
 
-type State = {
+type ChartState = {
   type: ChartType;
   appearance: Appearance;
   ...
@@ -219,7 +223,7 @@ type State = {
 
 // Define functions and their corresponding logic to update state
 
-const functionReducer: ZodFunctionReducer<State> = {
+const functionReducer: ZodFunctionReducer<ChartState> = {
   functions: [
     {
       name: "change_chart_type",
@@ -237,7 +241,7 @@ const functionReducer: ZodFunctionReducer<State> = {
     },
     (...other functions...)
   ],
-  reducer: (prev: State, name: string, args) => {
+  reducer: (prev: ChartState, name: string, args) => {
     switch (name) {
       case "change_chart_type":
         const { type } = args;
@@ -257,7 +261,7 @@ const functionReducer: ZodFunctionReducer<State> = {
 };
 
 // Initial chart state
-let state: State = {
+let state: ChartState = {
   type: "Line",
   appearance: "Light"
 }
