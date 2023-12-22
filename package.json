@@ -10,6 +10,7 @@
     "type": "git",
     "url": "https://github.com/holdenmatt/openai-zod-functions"
   },
+  "keywords": ["openai", "zod", "functions", "function calling"],
   "files": [
     "dist"
   ],

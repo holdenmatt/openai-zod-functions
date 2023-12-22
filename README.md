@@ -7,8 +7,8 @@ Feel free to fork/copy code if helpful.
 
 ## What is this?
 
-OpenAI Function Calling (released in June 2023), is my favorite part of using
-LLM APIs.
+OpenAI [Function Calling](https://platform.openai.com/docs/guides/function-calling)
+(released in June 2023), is my favorite part of using LLM APIs.
 
 This library makes it easier to use Function Calling in TypeScript
 using [Zod](https://zod.dev/) to define functions instead of JSON-Schema.
