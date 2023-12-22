@@ -8,7 +8,7 @@ import { findFunction, parseArguments } from "./utils/parse";
 type FunctionReducer<State, Parameters = any> = (
   prevState: State,
   functionName: string,
-  args: Parameters
+  args: Parameters,
 ) => State;
 
 /**
@@ -45,7 +45,7 @@ export type ZodFunctionReducer<State> = {
 export async function reduceToolCalls<State>(
   prevState: State,
   functionReducer: ZodFunctionReducer<State>,
-  toolCalls: ChatCompletionMessageToolCall[] | undefined
+  toolCalls: ChatCompletionMessageToolCall[] | undefined,
 ): Promise<State> {
   if (toolCalls === undefined) {
     return prevState;
@@ -57,11 +57,7 @@ export async function reduceToolCalls<State>(
     const { name } = toolCall.function;
     const func = findFunction(name, functionReducer.functions);
 
-    const parameters = parseArguments(
-      name,
-      toolCall.function.arguments,
-      func.schema
-    );
+    const parameters = parseArguments(name, toolCall.function.arguments, func.schema);
 
     try {
       logger.info("Calling reducer: ", name);

@@ -6,10 +6,7 @@ import { logger } from "./logging";
  * Assert that a ChatCompletion response contains a single tool_call.
  * Throw an error if it doesn't.
  */
-export function assertSingleToolCall(
-  completion: ChatCompletion,
-  label?: string
-): void {
+export function assertSingleToolCall(completion: ChatCompletion, label?: string): void {
   const prefix = label ? `Unexpected (${label})` : "Unexpected";
 
   if (completion.choices.length !== 1) {
@@ -26,8 +23,8 @@ export function assertSingleToolCall(
       `${prefix}: Multiple tool calls for ${label}: ${JSON.stringify(
         tool_calls,
         null,
-        2
-      )}`
+        2,
+      )}`,
     );
     throw new Error(`${prefix}: got ${tool_calls.length} tool_calls`);
   }

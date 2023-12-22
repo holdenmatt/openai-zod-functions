@@ -34,10 +34,7 @@ export class InvalidFunctionArguments extends HttpError {
  *
  * Throws InvalidFunctionName if no function with that name is found.
  */
-export function findFunction(
-  name: string,
-  functions: ZodFunctionDef[]
-): ZodFunctionDef {
+export function findFunction(name: string, functions: ZodFunctionDef[]): ZodFunctionDef {
   const func = functions.find((f) => f.name === name);
   if (!func) {
     throw new InvalidFunctionName(name);
@@ -54,7 +51,7 @@ export function findFunction(
 export function parseArguments<Parameters>(
   name: string,
   args: string,
-  schema: z.ZodType<Parameters, any, any>
+  schema: z.ZodType<Parameters, any, any>,
 ): Parameters {
   // Parse the arguments string to JSON (should be guaranteed)
   const parameters = JSON.parse(args);

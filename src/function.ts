@@ -35,9 +35,7 @@ type JsonSchemaFunctionDef = {
 /**
  * Convert a ZodFunctionDef to JSON Schema.
  */
-export function toJsonSchema(
-  functionDef: ZodFunctionDef
-): JsonSchemaFunctionDef {
+export function toJsonSchema(functionDef: ZodFunctionDef): JsonSchemaFunctionDef {
   const { name, description, schema } = functionDef;
 
   const jsonSchema = zodToJsonSchema(schema) as JsonSchema7ObjectType;
@@ -47,7 +45,11 @@ export function toJsonSchema(
   return {
     name,
     description,
-    parameters: { type, properties, required },
+    parameters: {
+      type,
+      properties,
+      required,
+    },
   };
 }
 

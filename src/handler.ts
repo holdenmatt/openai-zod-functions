@@ -22,10 +22,9 @@ export class FunctionHandlerError extends HttpError {
  * The handler takes the parsed/typed function parameters as arguments,
  * and can perform any (async) computation and/or return an arbitrary output.
  */
-export type ZodFunctionHandler<Parameters, Output> =
-  ZodFunctionDef<Parameters> & {
-    handler: (parameters: Parameters) => Promise<Output>;
-  };
+export type ZodFunctionHandler<Parameters, Output> = ZodFunctionDef<Parameters> & {
+  handler: (parameters: Parameters) => Promise<Output>;
+};
 
 /**
  * Create a ZodFunctionHandler.
@@ -33,10 +32,7 @@ export type ZodFunctionHandler<Parameters, Output> =
  * You can also create one directly, but this convenience function
  * infers type parameters automatically from the schema/handler types.
  */
-export function createFunctionHandler<
-  Schema extends z.ZodType<any, any, any>,
-  Output
->({
+export function createFunctionHandler<Schema extends z.ZodType<any, any, any>, Output>({
   name,
   description,
   schema,
@@ -57,7 +53,7 @@ export function createFunctionHandler<
  */
 function findHandler<Parameters, Output>(
   name: string,
-  handlers: ZodFunctionHandler<Parameters, Output>[]
+  handlers: ZodFunctionHandler<Parameters, Output>[],
 ): ZodFunctionHandler<Parameters, Output> {
   const handler = handlers.find((h) => h.name === name);
   if (!handler) {
@@ -74,7 +70,7 @@ function findHandler<Parameters, Output>(
  */
 async function handleSingleToolCall<Output>(
   handlers: ZodFunctionHandler<any, Output>[],
-  toolCall: ChatCompletionMessageToolCall
+  toolCall: ChatCompletionMessageToolCall,
 ): Promise<Output> {
   const { name } = toolCall.function;
 
@@ -83,7 +79,7 @@ async function handleSingleToolCall<Output>(
   const parameters = parseArguments(
     toolCall.function.name,
     toolCall.function.arguments,
-    handler.schema
+    handler.schema,
   );
 
   try {
@@ -104,14 +100,14 @@ async function handleSingleToolCall<Output>(
  */
 export async function handleToolCalls<Output>(
   handlers: ZodFunctionHandler<any, Output>[],
-  toolCalls: ChatCompletionMessageToolCall[] | undefined
+  toolCalls: ChatCompletionMessageToolCall[] | undefined,
 ): Promise<Output[]> {
   if (toolCalls === undefined) {
     return [];
   }
 
   const toolOutputs = await Promise.all(
-    toolCalls.map((toolCall) => handleSingleToolCall(handlers, toolCall))
+    toolCalls.map((toolCall) => handleSingleToolCall(handlers, toolCall)),
   );
 
   return toolOutputs;
