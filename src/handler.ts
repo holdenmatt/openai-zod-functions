@@ -51,7 +51,7 @@ export function createFunctionHandler<Schema extends z.ZodType<any, any, any>, O
  *
  * Throws InvalidFunctionName if no function with that name is found.
  */
-function findHandler<Parameters, Output>(
+export function findHandler<Parameters, Output>(
   name: string,
   handlers: ZodFunctionHandler<Parameters, Output>[],
 ): ZodFunctionHandler<Parameters, Output> {
@@ -68,7 +68,7 @@ function findHandler<Parameters, Output>(
  * Returns the handler output if successful.
  * Throws an error if the name isn't found, arguments are invalid, or the handler throws.
  */
-async function handleSingleToolCall<Output>(
+export async function handleSingleToolCall<Output>(
   handlers: ZodFunctionHandler<any, Output>[],
   toolCall: ChatCompletionMessageToolCall,
 ): Promise<Output> {
