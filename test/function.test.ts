@@ -16,22 +16,21 @@ const func: ZodFunctionDef = {
 describe("toJsonSchema", () => {
   it("converts a simple Zod schema to JSON Schema", () => {
     const jsonSchema = toJsonSchema(func);
-    console.log(jsonSchema);
 
     expect(jsonSchema.name).toBe("get_current_weather");
     expect(jsonSchema.description).toBe("Get the current weather");
     expect(jsonSchema.parameters).toBeDefined();
     expect(jsonSchema.parameters.type).toBe("object");
-    expect(jsonSchema.parameters.properties.location).toBe({
+    expect(jsonSchema.parameters.properties.location).toEqual({
       type: "string",
       description: "The city and state, e.g. San Francisco, CA",
     });
-    expect(jsonSchema.parameters.properties.format).toBe({
+    expect(jsonSchema.parameters.properties.format).toEqual({
       type: "string",
       enum: ["celsius", "fahrenheit"],
       description: "The temperature unit to use. Infer this from the users location.",
     });
-    expect(jsonSchema.parameters.properties.request).toBe(["location", "format"]);
+    expect(jsonSchema.parameters.required).toEqual(["location", "format"]);
   });
 });
 
@@ -41,6 +40,24 @@ describe("toTool", () => {
 
     expect(tool.type).toBe("function");
     expect(tool.function).toBeDefined();
-    expect(tool.function.parameters?.type).toBe("object");
+
+    // Check the properties of the function in the tool
+    const { function: toolFunction } = tool;
+    expect(toolFunction.name).toBe(func.name);
+    expect(toolFunction.description).toBe(func.description);
+    expect(toolFunction.parameters?.type).toBe("object");
+
+    const props = toolFunction.parameters?.properties as any;
+    expect(props.location).toEqual({
+      type: "string",
+      description: "The city and state, e.g. San Francisco, CA",
+    });
+    expect(props?.format).toEqual({
+      type: "string",
+      enum: ["celsius", "fahrenheit"],
+      description: "The temperature unit to use. Infer this from the users location.",
+    });
+
+    expect(toolFunction.parameters?.required).toEqual(["location", "format"]);
   });
 });
